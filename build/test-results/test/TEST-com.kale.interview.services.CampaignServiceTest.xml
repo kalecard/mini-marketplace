@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kale.interview.services.CampaignServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-03-04T16:40:32" hostname="Luiss-MacBook-Pro.local" time="0.308">
+  <properties/>
+  <testcase name="activateCampaign throws when campaign is already ACTIVE" classname="com.kale.interview.services.CampaignServiceTest" time="0.17"/>
+  <testcase name="activateCampaign transitions from DRAFT to ACTIVE" classname="com.kale.interview.services.CampaignServiceTest" time="0.009"/>
+  <testcase name="approveSubmission transitions from PENDING to APPROVED" classname="com.kale.interview.services.CampaignServiceTest" time="0.04"/>
+  <testcase name="createCampaign creates a campaign in DRAFT state" classname="com.kale.interview.services.CampaignServiceTest" time="0.003"/>
+  <testcase name="createCampaign fails for nonexistent brand" classname="com.kale.interview.services.CampaignServiceTest" time="0.002"/>
+  <testcase name="getCampaigns returns all campaigns" classname="com.kale.interview.services.CampaignServiceTest" time="0.009"/>
+  <testcase name="rejectSubmission transitions from PENDING to REJECTED" classname="com.kale.interview.services.CampaignServiceTest" time="0.011"/>
+  <testcase name="submitContent creates a submission for an active campaign" classname="com.kale.interview.services.CampaignServiceTest" time="0.008"/>
+  <testcase name="submitContent fails for a DRAFT campaign" classname="com.kale.interview.services.CampaignServiceTest" time="0.003"/>
+  <system-out><![CDATA[
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2026-03-04T11:40:30.656-05:00  INFO 5275 --- [    Test worker] c.k.i.services.CampaignServiceTest       : Starting CampaignServiceTest using Java 17.0.16 with PID 5275 (/Users/luis/workspace/kale-backend/interview/pair-programming/build/classes/kotlin/test started by luis in /Users/luis/workspace/kale-backend/interview/pair-programming)
+2026-03-04T11:40:30.657-05:00  INFO 5275 --- [    Test worker] c.k.i.services.CampaignServiceTest       : No active profile set, falling back to 1 default profile: "default"
+2026-03-04T11:40:31.121-05:00  INFO 5275 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-04T11:40:31.196-05:00  INFO 5275 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@10a064bd
+2026-03-04T11:40:31.197-05:00  INFO 5275 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-04T11:40:31.210-05:00  INFO 5275 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:60577/interview_test (PostgreSQL 16.13)
+2026-03-04T11:40:31.237-05:00  INFO 5275 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-03-04T11:40:31.238-05:00  INFO 5275 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.008s)
+2026-03-04T11:40:31.250-05:00  INFO 5275 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-03-04T11:40:31.287-05:00  INFO 5275 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-03-04T11:40:31.292-05:00  INFO 5275 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - initial"
+2026-03-04T11:40:31.311-05:00  INFO 5275 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.010s)
+2026-03-04T11:40:31.813-05:00  INFO 5275 --- [    Test worker] c.n.g.d.s.ReloadableGraphQLSource        : Rebuilding GraphQLSource
+2026-03-04T11:40:31.999-05:00  INFO 5275 --- [    Test worker] .d.s.a.DgsSpringGraphQLAutoConfiguration : ***Schema Report***
+Unmapped fields: [Query._service]
+Unmapped registrations: {}
+Unmapped arguments: []
+Skipped types: []
+
+2026-03-04T11:40:32.017-05:00  INFO 5275 --- [    Test worker] s.b.a.g.s.GraphQlWebMvcAutoConfiguration : GraphQL endpoint HTTP POST /graphql
+2026-03-04T11:40:32.108-05:00  INFO 5275 --- [    Test worker] c.k.i.services.CampaignServiceTest       : Started CampaignServiceTest in 1.632 seconds (process running for 3.552)
+2026-03-04T11:40:32.495-05:00  INFO 5275 --- [    Test worker] org.jooq.Constants                       : 
+                                      
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@  @@        @@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@        @@@@@@@@@@
+@@@@@@@@@@@@@@@@  @@  @@    @@@@@@@@@@
+@@@@@@@@@@  @@@@  @@  @@    @@@@@@@@@@
+@@@@@@@@@@        @@        @@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@        @@        @@@@@@@@@@
+@@@@@@@@@@    @@  @@  @@@@  @@@@@@@@@@
+@@@@@@@@@@    @@  @@  @@@@  @@@@@@@@@@
+@@@@@@@@@@        @@  @  @  @@@@@@@@@@
+@@@@@@@@@@        @@        @@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Thank you for using jOOQ 3.19.11 (Build date: 2024-08-13T06:15:09Z)
+                                      
+2026-03-04T11:40:32.495-05:00  INFO 5275 --- [    Test worker] org.jooq.Constants                       : 
+
+jOOQ tip of the day: The logical order of SELECT operations doesn't match the lexical (syntactic) order of operations. Learn more about this here: https://blog.jooq.org/a-beginners-guide-to-the-true-order-of-sql-operations/
+
+2026-03-04T11:40:32.519-05:00  INFO 5275 --- [    Test worker] o.j.i.D.logVersionSupport                : Version                  : Database version is supported by dialect POSTGRES: 16.13
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
