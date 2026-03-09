@@ -1,70 +1,50 @@
-# Kale Interview - Mini Marketplace
+# Mini Marketplace
 
-A simplified creator marketplace backend built with Kotlin, Spring Boot, DGS GraphQL, and JOOQ.
+A simplified creator marketplace backend where brands create campaigns and creators submit content. Includes approval and payment workflows with state machine transitions.
+
+Two functionally equivalent implementations share the same PostgreSQL database and GraphQL API contract:
+
+| | Kotlin | TypeScript |
+|---|---|---|
+| Framework | Spring Boot + DGS GraphQL | graphql-yoga |
+| DB access | JOOQ | pg (raw SQL) |
+| Testing | TestNG + TestContainers | Vitest + TestContainers |
 
 ## Prerequisites
 
-- JDK 17+
 - Docker (for PostgreSQL)
+- **Kotlin**: JDK 17+
+- **TypeScript**: Node.js 20+
 
-## Setup
-
-**1. Start PostgreSQL:**
+## Quick Start
 
 ```bash
+# Start PostgreSQL (shared by both implementations)
 docker-compose up -d
+
+# Run Kotlin version
+cd kotlin && ./gradlew bootRun
+
+# — OR —
+
+# Run TypeScript version
+cd typescript && npm install && npm run dev
 ```
 
-**2. Run the application:**
+Both serve the GraphQL API at `http://localhost:8080/graphql`.
 
-```bash
-./gradlew bootRun
-```
+See each subfolder's README for implementation-specific details:
 
-The app runs Flyway migrations automatically on startup.
+- [kotlin/README.md](kotlin/README.md)
+- [typescript/README.md](typescript/README.md)
 
-**3. Open GraphiQL:**
+## Database
 
-Visit [http://localhost:8080/graphiql](http://localhost:8080/graphiql) to explore the API.
+PostgreSQL runs on `localhost:5433` (mapped from container port 5432).
 
-## Running Tests
+Four tables: `brands`, `creators`, `campaigns`, `submissions`. Both implementations use the same `V1__initial.sql` migration.
 
-Tests use TestContainers (spins up a temporary PostgreSQL instance automatically -- no manual Docker setup needed):
-
-```bash
-./gradlew test
-```
-
-## Project Structure
-
-```
-src/main/kotlin/com/kale/interview/
-├── KaleInterviewApplication.kt          # Spring Boot entry point
-├── data/
-│   ├── Models.kt                        # Brand, Creator, Campaign, Submission
-│   ├── CampaignState.kt                 # DRAFT, ACTIVE, COMPLETED
-│   └── SubmissionState.kt               # PENDING, APPROVED, REJECTED, PAID
-├── repositories/
-│   ├── BrandRepository.kt               # JOOQ queries for brands
-│   ├── CreatorRepository.kt             # JOOQ queries for creators
-│   ├── CampaignRepository.kt            # JOOQ queries for campaigns
-│   └── SubmissionRepository.kt          # JOOQ queries for submissions
-├── services/
-│   ├── CampaignService.kt               # Campaign CRUD + state transitions
-│   └── SubmissionService.kt             # Submit, approve, reject
-└── graphql/
-    ├── CampaignDataFetcher.kt           # GraphQL queries + mutations
-    └── SubmissionDataFetcher.kt         # GraphQL queries + mutations
-```
-
-## Key Patterns
-
-- **JOOQ without codegen**: Repositories use `DSLContext` with string-based table/field references
-- **DGS GraphQL**: `@DgsComponent` data fetchers with `@DgsQuery` / `@DgsMutation`
-- **State machines**: Enums stored as strings in the database, validated in the service layer
-- **`@Transactional`**: Service methods that mutate data run inside transactions
-
-## Example Queries
+## GraphQL API
 
 ```graphql
 # Create a campaign
@@ -74,53 +54,25 @@ mutation {
     title: "Summer Campaign"
     payoutCents: 5000
     maxSubmissions: 50
-  }) {
-    id
-    title
-    state
-  }
+  }) { id title state }
 }
 
-# List all campaigns
-query {
-  campaigns {
-    id
-    title
-    state
-    payoutCents
-  }
-}
+# List campaigns
+query { campaigns { id title state payoutCents } }
 
 # Activate a campaign
-mutation {
-  activateCampaign(campaignId: "1") {
-    id
-    state
-  }
-}
+mutation { activateCampaign(campaignId: "1") { id state } }
 
-# Submit content to a campaign
+# Submit content
 mutation {
   submitContent(input: {
     campaignId: "1"
     creatorId: "creator-1"
     contentUrl: "https://example.com/video.mp4"
-  }) {
-    id
-    state
-  }
+  }) { id state }
 }
 
-# Approve a submission
-mutation {
-  approveSubmission(submissionId: "1") {
-    id
-    state
-    reviewedAt
-  }
-}
+# Approve / reject a submission
+mutation { approveSubmission(submissionId: "1") { id state reviewedAt } }
+mutation { rejectSubmission(submissionId: "1") { id state reviewedAt } }
 ```
-
-## Database Schema
-
-Four tables: `brands`, `creators`, `campaigns`, `submissions`. See `src/main/resources/db/migration/V1__initial.sql` for the full schema.
