@@ -43,6 +43,14 @@ export class SubmissionRepository {
     return rows[0].count;
   }
 
+  async findByCampaignIdAndState(campaignId: number, state: string): Promise<Submission[]> {
+    const { rows } = await this.db.query(
+      `SELECT * FROM submissions WHERE campaign_id = $1 AND state = '${state}' ORDER BY created_at DESC`,
+      [campaignId],
+    );
+    return rows.map(toSubmission);
+  }
+
   async create(
     campaignId: number,
     creatorId: string,

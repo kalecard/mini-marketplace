@@ -37,6 +37,8 @@ export function createResolvers(
         ),
       activateCampaign: (_: unknown, { campaignId }: { campaignId: string }) =>
         campaignService.activateCampaign(Number(campaignId)),
+      completeCampaign: (_: unknown, { campaignId }: { campaignId: string }) =>
+        campaignService.completeCampaign(Number(campaignId)),
       submitContent: (
         _: unknown,
         {
@@ -54,6 +56,8 @@ export function createResolvers(
         submissionService.approveSubmission(Number(submissionId)),
       rejectSubmission: (_: unknown, { submissionId }: { submissionId: string }) =>
         submissionService.rejectSubmission(Number(submissionId)),
+      processPayment: (_: unknown, { submissionId }: { submissionId: string }) =>
+        submissionService.processPayment(Number(submissionId)),
     },
   };
 }
