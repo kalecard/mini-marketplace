@@ -7,9 +7,11 @@ type Query {
 type Mutation {
     createCampaign(input: CreateCampaignInput!): Campaign!
     activateCampaign(campaignId: ID!): Campaign!
+    completeCampaign(campaignId: ID!): Campaign!
     submitContent(input: SubmitContentInput!): Submission!
     approveSubmission(submissionId: ID!): Submission!
     rejectSubmission(submissionId: ID!): Submission!
+    processPayment(submissionId: ID!): Submission!
 }
 
 type Campaign {

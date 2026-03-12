@@ -2,6 +2,7 @@ import type pg from "pg";
 import type { Submission } from "../data/models.js";
 import { CampaignState } from "../data/enums.js";
 import { SubmissionState } from "../data/enums.js";
+import { BrandRepository } from "../repositories/brand-repository.js";
 import { CampaignRepository } from "../repositories/campaign-repository.js";
 import { CreatorRepository } from "../repositories/creator-repository.js";
 import { SubmissionRepository } from "../repositories/submission-repository.js";
@@ -76,6 +77,46 @@ export class SubmissionService {
         throw new Error("Submission must be in PENDING state to reject");
       }
       return repo.updateState(id, SubmissionState.REJECTED);
+    });
+  }
+
+  async processPayment(id: number): Promise<Submission> {
+    return withTransaction(this.pool, async (client) => {
+      const submissionRepo = new SubmissionRepository(client);
+      const submission = await submissionRepo.findById(id);
+      if (!submission) {
+        throw new Error(`Submission ${id} not found`);
+      }
+      if (submission.state !== SubmissionState.APPROVED) {
+        throw new Error("Submission must be in APPROVED state to process payment");
+      }
+
+      const campaignRepo = new CampaignRepository(client);
+      const campaign = await campaignRepo.findById(submission.campaignId);
+      if (!campaign) {
+        throw new Error(`Campaign ${submission.campaignId} not found`);
+      }
+
+      const brandRepo = new BrandRepository(this.pool);
+      const brand = await brandRepo.findById(campaign.brandId);
+      if (!brand) {
+        throw new Error(`Brand ${campaign.brandId} not found`);
+      }
+
+      if (brand.balanceCents < campaign.payoutCents) {
+        throw new Error("Insufficient brand balance for payout");
+      }
+
+      brandRepo.updateBalance(brand.id, brand.balanceCents - campaign.payoutCents);
+
+      const creatorRepo = new CreatorRepository(client);
+      const creator = await creatorRepo.findById(submission.creatorId);
+      if (!creator) {
+        throw new Error(`Creator ${submission.creatorId} not found`);
+      }
+      await creatorRepo.updateBalance(creator.id, creator.balanceCents - campaign.payoutCents);
+
+      return submissionRepo.updateState(id, SubmissionState.PAID);
     });
   }
 }

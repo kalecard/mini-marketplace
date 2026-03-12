@@ -49,4 +49,18 @@ export class CampaignService {
       return repo.updateState(id, CampaignState.ACTIVE);
     });
   }
+
+  async completeCampaign(id: number): Promise<Campaign> {
+    return withTransaction(this.pool, async (client) => {
+      const repo = new CampaignRepository(client);
+      const campaign = await repo.findById(id);
+      if (!campaign) {
+        throw new Error(`Campaign ${id} not found`);
+      }
+      if (campaign.state !== CampaignState.DRAFT) {
+        throw new Error("Campaign must be in ACTIVE state to complete");
+      }
+      return repo.updateState(id, CampaignState.COMPLETED);
+    });
+  }
 }
