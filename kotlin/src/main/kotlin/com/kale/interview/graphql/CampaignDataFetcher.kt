@@ -30,6 +30,10 @@ class CampaignDataFetcher(private val campaignService: CampaignService) {
     @DgsMutation
     fun activateCampaign(@InputArgument campaignId: String): Campaign =
         campaignService.activateCampaign(campaignId.toLong())
+
+    @DgsMutation
+    fun completeCampaign(@InputArgument campaignId: String): Campaign =
+        campaignService.completeCampaign(campaignId.toLong())
 }
 
 data class CreateCampaignInput(

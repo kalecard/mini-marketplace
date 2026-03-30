@@ -26,6 +26,13 @@ class SubmissionRepository(private val dsl: DSLContext) {
             .map { it.toSubmission() }
     }
 
+    fun findByCampaignIdAndState(campaignId: Long, state: String): List<Submission> {
+        return dsl.fetch(
+            "SELECT * FROM submissions WHERE campaign_id = ? AND state = '${state}' ORDER BY created_at DESC",
+            campaignId,
+        ).map { it.toSubmission() }
+    }
+
     fun countByCampaignId(campaignId: Long): Int {
         return dsl.selectCount()
             .from(DSL.table("submissions"))

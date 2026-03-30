@@ -39,4 +39,14 @@ class CampaignService(
         }
         return campaignRepository.updateState(id, CampaignState.ACTIVE)
     }
+
+    @Transactional
+    fun completeCampaign(id: Long): Campaign {
+        val campaign = campaignRepository.findById(id)
+            ?: throw IllegalArgumentException("Campaign $id not found")
+        if (campaign.state != CampaignState.DRAFT) {
+            throw IllegalStateException("Campaign must be in ACTIVE state to complete")
+        }
+        return campaignRepository.updateState(id, CampaignState.COMPLETED)
+    }
 }

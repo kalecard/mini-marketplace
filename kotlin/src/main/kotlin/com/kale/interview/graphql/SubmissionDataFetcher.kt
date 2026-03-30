@@ -29,6 +29,10 @@ class SubmissionDataFetcher(private val submissionService: SubmissionService) {
     @DgsMutation
     fun rejectSubmission(@InputArgument submissionId: String): Submission =
         submissionService.rejectSubmission(submissionId.toLong())
+
+    @DgsMutation
+    fun processPayment(@InputArgument submissionId: String): Submission =
+        submissionService.processPayment(submissionId.toLong())
 }
 
 data class SubmitContentInput(
