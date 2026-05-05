@@ -3,6 +3,8 @@ package com.kale.interview.services;
 import com.kale.interview.BaseIntegrationTest;
 import com.kale.interview.data.Campaign;
 import com.kale.interview.data.CampaignState;
+import com.kale.interview.data.Submission;
+import com.kale.interview.data.SubmissionState;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CampaignServiceTest extends BaseIntegrationTest {
 
     @Autowired CampaignService campaignService;
+    @Autowired SubmissionService submissionService;
     @Autowired DSLContext dsl;
 
     long brandId;
@@ -83,5 +86,53 @@ class CampaignServiceTest extends BaseIntegrationTest {
 
         List<Campaign> campaigns = campaignService.getCampaigns();
         assertEquals(2, campaigns.size());
+    }
+
+    @Test
+    void submitContent_createsSubmissionForActiveCampaign() {
+        Campaign campaign = campaignService.createCampaign(brandId, "Test Campaign", null, 5_000, 50);
+        campaignService.activateCampaign(campaign.id());
+
+        Submission submission = submissionService.submitContent(
+                campaign.id(), "creator-1", "https://example.com/video.mp4");
+
+        assertNotNull(submission.id());
+        assertEquals(campaign.id(), submission.campaignId());
+        assertEquals("creator-1", submission.creatorId());
+        assertEquals(SubmissionState.PENDING, submission.state());
+    }
+
+    @Test
+    void submitContent_failsForDraftCampaign() {
+        Campaign campaign = campaignService.createCampaign(brandId, "Test Campaign", null, 5_000, 50);
+
+        assertThrows(IllegalStateException.class, () ->
+                submissionService.submitContent(campaign.id(), "creator-1", "https://example.com/video.mp4"));
+    }
+
+    @Test
+    void approveSubmission_transitionsFromPendingToApproved() {
+        Campaign campaign = campaignService.createCampaign(brandId, "Test Campaign", null, 5_000, 50);
+        campaignService.activateCampaign(campaign.id());
+        Submission submission = submissionService.submitContent(
+                campaign.id(), "creator-1", "https://example.com/video.mp4");
+
+        Submission approved = submissionService.approveSubmission(submission.id());
+
+        assertEquals(SubmissionState.APPROVED, approved.state());
+        assertNotNull(approved.reviewedAt());
+    }
+
+    @Test
+    void rejectSubmission_transitionsFromPendingToRejected() {
+        Campaign campaign = campaignService.createCampaign(brandId, "Test Campaign", null, 5_000, 50);
+        campaignService.activateCampaign(campaign.id());
+        Submission submission = submissionService.submitContent(
+                campaign.id(), "creator-1", "https://example.com/video.mp4");
+
+        Submission rejected = submissionService.rejectSubmission(submission.id());
+
+        assertEquals(SubmissionState.REJECTED, rejected.state());
+        assertNotNull(rejected.reviewedAt());
     }
 }
