@@ -37,7 +37,7 @@ cd typescript && npm install && npm run dev
 cd java && ./mvnw spring-boot:run
 ```
 
-Both serve the GraphQL API at `http://localhost:8080/graphql`.
+All serve the GraphQL API at `http://localhost:8080/graphql`.
 
 See each subfolder's README for implementation-specific details:
 
