@@ -1,0 +1,64 @@
+type Query {
+    campaigns: [Campaign!]!
+    campaign(id: ID!): Campaign
+    submissions(campaignId: ID!): [Submission!]!
+}
+
+type Mutation {
+    createCampaign(input: CreateCampaignInput!): Campaign!
+    activateCampaign(campaignId: ID!): Campaign!
+    submitContent(input: SubmitContentInput!): Submission!
+    approveSubmission(submissionId: ID!): Submission!
+    rejectSubmission(submissionId: ID!): Submission!
+}
+
+type Campaign {
+    id: ID!
+    brandId: ID!
+    title: String!
+    description: String
+    payoutCents: Int!
+    maxSubmissions: Int!
+    state: CampaignState!
+    startsAt: String
+    endsAt: String
+    createdAt: String!
+}
+
+type Submission {
+    id: ID!
+    campaignId: ID!
+    creatorId: ID!
+    contentUrl: String!
+    state: SubmissionState!
+    reviewedAt: String
+    paidAt: String
+    createdAt: String!
+}
+
+enum CampaignState {
+    DRAFT
+    ACTIVE
+    COMPLETED
+}
+
+enum SubmissionState {
+    PENDING
+    APPROVED
+    REJECTED
+    PAID
+}
+
+input CreateCampaignInput {
+    brandId: ID!
+    title: String!
+    description: String
+    payoutCents: Int!
+    maxSubmissions: Int
+}
+
+input SubmitContentInput {
+    campaignId: ID!
+    creatorId: ID!
+    contentUrl: String!
+}
