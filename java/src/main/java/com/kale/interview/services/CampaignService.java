@@ -2,8 +2,10 @@ package com.kale.interview.services;
 
 import com.kale.interview.data.Campaign;
 import com.kale.interview.data.CampaignState;
+import com.kale.interview.data.SubmissionState;
 import com.kale.interview.repositories.BrandRepository;
 import com.kale.interview.repositories.CampaignRepository;
+import com.kale.interview.repositories.SubmissionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +16,16 @@ public class CampaignService {
 
     private final CampaignRepository campaignRepository;
     private final BrandRepository brandRepository;
+    private final SubmissionRepository submissionRepository;
 
-    public CampaignService(CampaignRepository campaignRepository, BrandRepository brandRepository) {
+    public CampaignService(
+            CampaignRepository campaignRepository,
+            BrandRepository brandRepository,
+            SubmissionRepository submissionRepository
+    ) {
         this.campaignRepository = campaignRepository;
         this.brandRepository = brandRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     public List<Campaign> getCampaigns() {
@@ -56,6 +64,9 @@ public class CampaignService {
         }
         if (campaign.state() != CampaignState.DRAFT) {
             throw new IllegalStateException("Campaign must be in ACTIVE state to complete");
+        }
+        if (!submissionRepository.findByCampaignIdAndState(id, SubmissionState.PENDING.name()).isEmpty()) {
+            throw new IllegalStateException("Campaign has approved submissions awaiting payment");
         }
         return campaignRepository.updateState(id, CampaignState.COMPLETED);
     }
