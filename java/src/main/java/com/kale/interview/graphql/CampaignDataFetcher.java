@@ -45,6 +45,11 @@ public class CampaignDataFetcher {
         return campaignService.activateCampaign(Long.parseLong(campaignId));
     }
 
+    @DgsMutation
+    public Campaign completeCampaign(@InputArgument String campaignId) {
+        return campaignService.completeCampaign(Long.parseLong(campaignId));
+    }
+
     public record CreateCampaignInput(
             String brandId,
             String title,

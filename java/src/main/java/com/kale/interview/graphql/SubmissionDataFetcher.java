@@ -42,6 +42,11 @@ public class SubmissionDataFetcher {
         return submissionService.rejectSubmission(Long.parseLong(submissionId));
     }
 
+    @DgsMutation
+    public Submission processPayment(@InputArgument String submissionId) {
+        return submissionService.processPayment(Long.parseLong(submissionId));
+    }
+
     public record SubmitContentInput(
             String campaignId,
             String creatorId,

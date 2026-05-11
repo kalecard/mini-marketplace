@@ -34,6 +34,14 @@ public class SubmissionRepository {
                 .map(SubmissionRepository::toSubmission);
     }
 
+    public List<Submission> findByCampaignIdAndState(long campaignId, String state) {
+        return dsl.fetch(
+                        "SELECT * FROM submissions WHERE campaign_id = ? AND state = '" + state + "' ORDER BY created_at DESC",
+                        campaignId
+                )
+                .map(SubmissionRepository::toSubmission);
+    }
+
     public int countByCampaignId(long campaignId) {
         Integer count = dsl.selectCount()
                 .from(DSL.table("submissions"))

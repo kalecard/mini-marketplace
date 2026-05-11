@@ -47,4 +47,16 @@ public class CampaignService {
         }
         return campaignRepository.updateState(id, CampaignState.ACTIVE);
     }
+
+    @Transactional
+    public Campaign completeCampaign(long id) {
+        Campaign campaign = campaignRepository.findById(id);
+        if (campaign == null) {
+            throw new IllegalArgumentException("Campaign " + id + " not found");
+        }
+        if (campaign.state() != CampaignState.DRAFT) {
+            throw new IllegalStateException("Campaign must be in ACTIVE state to complete");
+        }
+        return campaignRepository.updateState(id, CampaignState.COMPLETED);
+    }
 }
