@@ -4,11 +4,11 @@ A simplified creator marketplace backend where brands create campaigns and creat
 
 Three functionally equivalent implementations share the same PostgreSQL database and GraphQL API contract:
 
-| | Kotlin | TypeScript | Java |
-|---|---|---|---|
-| Framework | Spring Boot + DGS GraphQL | graphql-yoga | Spring Boot + DGS GraphQL |
-| DB access | JOOQ | pg (raw SQL) | JOOQ |
-| Testing | TestNG + TestContainers | Vitest + TestContainers | JUnit 5 + Testcontainers |
+| | Kotlin | TypeScript | Java | Python |
+|---|---|---|---|---|
+| Framework | Spring Boot + DGS GraphQL | graphql-yoga | Spring Boot + DGS GraphQL | Strawberry + FastAPI |
+| DB access | JOOQ | pg (raw SQL) | JOOQ | asyncpg (raw SQL) |
+| Testing | TestNG + TestContainers | Vitest + TestContainers | JUnit 5 + Testcontainers | pytest + Testcontainers |
 
 ## Prerequisites
 
@@ -16,6 +16,7 @@ Three functionally equivalent implementations share the same PostgreSQL database
 - **Kotlin**: JDK 17+
 - **TypeScript**: Node.js 20+
 - **Java**: JDK 17+
+- **Python**: Python 3.11+
 
 ## Quick Start
 
@@ -35,6 +36,11 @@ cd typescript && npm install && npm run dev
 
 # Run Java version
 cd java && ./mvnw spring-boot:run
+
+# — OR —
+
+# Run Python version
+cd python && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/python -m src.main
 ```
 
 All serve the GraphQL API at `http://localhost:8080/graphql`.
@@ -44,6 +50,7 @@ See each subfolder's README for implementation-specific details:
 - [kotlin/README.md](kotlin/README.md)
 - [typescript/README.md](typescript/README.md)
 - [java/README.md](java/README.md)
+- [python/README.md](python/README.md)
 
 ## Database
 
