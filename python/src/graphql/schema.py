@@ -1,4 +1,5 @@
 import strawberry
+from strawberry.types.unset import UNSET, UnsetType
 
 from src.graphql.types import (
     Campaign,
@@ -36,12 +37,17 @@ class Mutation:
         self, info: strawberry.Info, input: CreateCampaignInput
     ) -> Campaign:
         service = info.context["campaign_service"]
+        description = None if isinstance(input.description, UnsetType) else input.description
+        max_submissions = (
+            100 if isinstance(input.max_submissions, UnsetType) or input.max_submissions is None
+            else input.max_submissions
+        )
         model = await service.create_campaign(
             int(input.brand_id),
             input.title,
-            input.description,
+            description,
             input.payout_cents,
-            input.max_submissions if input.max_submissions is not None else 100,
+            max_submissions,
         )
         return Campaign.from_model(model)
 

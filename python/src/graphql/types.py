@@ -1,4 +1,5 @@
 import strawberry
+from strawberry.types.unset import UNSET
 
 from src.data import enums, models
 
@@ -66,8 +67,8 @@ class CreateCampaignInput:
     brand_id: strawberry.ID
     title: str
     payout_cents: int
-    description: str | None = None
-    max_submissions: int | None = None
+    description: str | None = UNSET  # type: ignore[assignment]
+    max_submissions: int | None = UNSET  # type: ignore[assignment]
 
 
 @strawberry.input
