@@ -1,0 +1,7 @@
+strawberry-graphql[fastapi]
+fastapi
+uvicorn[standard]
+asyncpg
+pytest
+pytest-asyncio
+testcontainers[postgres]
