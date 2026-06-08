@@ -2,7 +2,7 @@
 
 A simplified creator marketplace backend where brands create campaigns and creators submit content. Includes approval and payment workflows with state machine transitions.
 
-Three functionally equivalent implementations share the same PostgreSQL database and GraphQL API contract:
+Four functionally equivalent implementations share the same PostgreSQL database and GraphQL API contract:
 
 | | Kotlin | TypeScript | Java | Python |
 |---|---|---|---|---|
