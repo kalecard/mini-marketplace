@@ -1,5 +1,5 @@
 import strawberry
-from strawberry.types.unset import UNSET, UnsetType
+from strawberry.types.unset import UnsetType
 
 from src.graphql.types import (
     Campaign,
