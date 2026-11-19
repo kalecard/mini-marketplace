@@ -59,6 +59,13 @@ class Mutation:
         return Campaign.from_model(model)
 
     @strawberry.mutation
+    async def complete_campaign(
+        self, info: strawberry.Info, campaign_id: strawberry.ID
+    ) -> Campaign:
+        model = await info.context["campaign_service"].complete_campaign(int(campaign_id))
+        return Campaign.from_model(model)
+
+    @strawberry.mutation
     async def submit_content(
         self, info: strawberry.Info, input: SubmitContentInput
     ) -> Submission:
@@ -80,6 +87,13 @@ class Mutation:
         self, info: strawberry.Info, submission_id: strawberry.ID
     ) -> Submission:
         model = await info.context["submission_service"].reject_submission(int(submission_id))
+        return Submission.from_model(model)
+
+    @strawberry.mutation
+    async def process_payment(
+        self, info: strawberry.Info, submission_id: strawberry.ID
+    ) -> Submission:
+        model = await info.context["submission_service"].process_payment(int(submission_id))
         return Submission.from_model(model)
 
 

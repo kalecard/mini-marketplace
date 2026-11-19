@@ -46,3 +46,15 @@ class CampaignService:
             return await repo.update_state(id, CampaignState.ACTIVE)
 
         return await with_transaction(self.pool, txn)
+
+    async def complete_campaign(self, id: int) -> Campaign:
+        async def txn(conn: asyncpg.Connection) -> Campaign:
+            repo = CampaignRepository(conn)
+            campaign = await repo.find_by_id(id)
+            if campaign is None:
+                raise ValueError(f"Campaign {id} not found")
+            if campaign.state is not CampaignState.DRAFT:
+                raise ValueError("Campaign must be in ACTIVE state to complete")
+            return await repo.update_state(id, CampaignState.COMPLETED)
+
+        return await with_transaction(self.pool, txn)
